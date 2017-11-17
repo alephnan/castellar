@@ -10,6 +10,9 @@ import { navResponsive } from '../actions/nav';
 
 import Login from '../screens/Login';
 import Dashboard from '../screens/Dashboard';
+import Services from '../screens/Services';
+import Versions from '../screens/Versions';
+import Instances from '../screens/Instances';
 import Tasks from '../screens/Tasks';
 import Task from '../screens/Task';
 import NotFound from '../screens/NotFound';
@@ -47,6 +50,9 @@ class Main extends Component {
             <Switch>
               <Route exact={true} path='/' component={Dashboard} />
               <Route path='/dashboard' component={Dashboard} />
+              <Route path='/services' component={Services} />
+              <Route path='/versions' component={Versions} />
+              <Route path='/instances' component={Instances} />
               <Route path='/login' component={Login} />
               <Route path='/tasks/:id' component={Task} />
               <Route path='/tasks' component={Tasks} />

@@ -36,7 +36,7 @@ class NavSidebar extends Component {
         <Header size='large' justify='between' pad={{ horizontal: 'medium' }}>
           <Title onClick={this._onClose} a11yTitle='Close Menu'>
             <Logo />
-            <span>Castellar</span>
+            <span>App Engine</span>
           </Title>
           <Button
             icon={<CloseIcon />}
