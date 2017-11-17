@@ -4,8 +4,15 @@ import { connect } from 'react-redux';
 import Anchor from 'grommet/components/Anchor';
 import Article from 'grommet/components/Article';
 import Box from 'grommet/components/Box';
+import Button from 'grommet/components/Button';
+import CloseIcon from 'grommet/components/icons/base/Close';
 import Header from 'grommet/components/Header';
 import Heading from 'grommet/components/Heading';
+import Select from 'grommet/components/Select';
+import Status from 'grommet/components/icons/Status';
+import Table from 'grommet/components/Table';
+import TableRow from 'grommet/components/TableRow';
+import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
 
@@ -19,6 +26,137 @@ class Versions extends Component {
 
   render() {
     const { intl } = this.context;
+    
+    const services = ['default', 'backend-api'];
+    const serviceSelector = (
+      <Select placeHolder='select a service'
+        inline={false}
+        multiple={false}
+        onSearch={false}
+        options={services}
+        value={[]}/>
+    );
+    const table = (
+      <Table scrollable={false}>
+        <thead>
+          <tr>
+            <th>
+              Id
+            </th>
+            <th>
+              Status
+            </th>
+            <th>
+              Traffic Allocation
+            </th>
+            <th>
+              Instances Count
+            </th>
+            <th>
+              Runtime
+            </th>
+            <th>
+              Environment
+            </th>
+            <th>
+              {/* Delete button column placeholder. */}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <TableRow>
+            <td>
+              default
+            </td>
+            <td>
+              <Status value='ok' />
+            </td>
+            <td>
+              May 9, 2017, 11:56:14 PM
+            </td>
+            <td>
+              1
+            </td>
+            <td>
+              python27
+            </td>
+            <td>
+              standard
+            </td>
+            <td>
+              <Button icon={<CloseIcon />}
+                onClick={() => alert('hi')}
+                href='#'
+                primary={false}
+                secondary={false}
+                accent={false}
+                critical={false}
+                plain={false} />
+            </td>
+          </TableRow>
+          <TableRow>
+            <td>
+              backend-api
+            </td>
+            <td>
+              <Status value='warning' />
+            </td>
+            <td>
+              May 31, 2017, 7:24:08 PM
+            </td>
+            <td>
+              0
+            </td>
+            <td>
+              nodej
+            </td>
+            <td>
+              flexible
+            </td>
+            <td>
+              <Button icon={<CloseIcon />}
+                onClick={() => alert('hi')}
+                href='#'
+                primary={false}
+                secondary={false}
+                accent={false}
+                critical={false}
+                plain={false} />
+            </td>
+          </TableRow>
+          <TableRow>
+            <td>
+              backend-api
+            </td>
+            <td>
+              <Status value='critical' />
+            </td>
+            <td>
+              May 31, 2017, 7:24:08 PM
+            </td>
+            <td>
+              0
+            </td>
+            <td>
+              nodej
+            </td>
+            <td>
+              flexible
+            </td>
+            <td>
+              <Button icon={<CloseIcon />}
+                onClick={() => alert('hi')}
+                href='#'
+                primary={false}
+                secondary={false}
+                accent={false}
+                critical={false}
+                plain={false} />
+            </td>
+          </TableRow>
+        </tbody>
+      </Table>
+    );
 
     return (
       <Article primary={true}>
@@ -28,12 +166,14 @@ class Versions extends Component {
           size='large'
           pad={{ horizontal: 'medium', between: 'small' }}
         >
-          <NavControl />
+        <NavControl name={getMessage(intl, 'Versions')} />
+        <Box size='medium'>
+          {serviceSelector}
+        </Box>
         </Header>
         <Box pad='medium'>
-          <Heading tag='h3' strong={true}>
-            Versions
-          </Heading>
+
+          {table}
         </Box>
       </Article>
     );
