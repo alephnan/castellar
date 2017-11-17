@@ -8,10 +8,12 @@ import Button from 'grommet/components/Button';
 import CloseIcon from 'grommet/components/icons/base/Close';
 import Header from 'grommet/components/Header';
 import Heading from 'grommet/components/Heading';
+import Meter from 'grommet/components/Meter';
 import Select from 'grommet/components/Select';
 import Status from 'grommet/components/icons/Status';
 import Table from 'grommet/components/Table';
 import TableRow from 'grommet/components/TableRow';
+import Value from 'grommet/components/Value';
 import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
@@ -72,7 +74,13 @@ class Versions extends Component {
               <Status value='ok' />
             </td>
             <td>
-              May 9, 2017, 11:56:14 PM
+              <Value
+                value='30'
+                units='%'
+                align='start'
+                size='small'
+              />
+              <Meter value='30' />
             </td>
             <td>
               1
@@ -102,7 +110,13 @@ class Versions extends Component {
               <Status value='warning' />
             </td>
             <td>
-              May 31, 2017, 7:24:08 PM
+              <Value
+                value='50'
+                units='%'
+                align='start'
+                size='small'
+              />
+              <Meter value='50' />
             </td>
             <td>
               0
@@ -132,7 +146,13 @@ class Versions extends Component {
               <Status value='critical' />
             </td>
             <td>
-              May 31, 2017, 7:24:08 PM
+              <Value
+                value='20'
+                units='%'
+                align='start'
+                size='small'
+              />
+              <Meter value='20' />
             </td>
             <td>
               0
