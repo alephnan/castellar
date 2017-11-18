@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import api from './api';
-import { addNotifier, getTasks, getTask } from './data';
+import { addNotifier, getTasks, getTask, getVersions } from './data';
 import Notifier from './notifier';
 
 const PORT = process.env.PORT || 8102;
@@ -27,6 +27,21 @@ addNotifier(
   }
 );
 
+addNotifier(
+  'version',
+  (version) => {
+    // this can be invoked multiple times as new requests happen
+    notifier.test((request) => {
+      // we should skip notify if the id of the task does not match the payload
+      if (request.path === '/api/version/:id' && request.params.id !== version.id) {
+        return false;
+      }
+      return true;
+    });
+  }
+);
+
+notifier.use('/api/version', () => getVersions());
 notifier.use('/api/task', () => getTasks());
 notifier.use('/api/task/:id', param => (
   getTask(param.id).then((result) => {

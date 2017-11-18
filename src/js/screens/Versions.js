@@ -18,15 +18,23 @@ import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
 
+import { loadVersions, unloadVersions } from '../actions/versions';
+
 import { pageLoaded } from './utils';
 
 class Versions extends Component {
+  
   componentDidMount() {
     pageLoaded('Versions');
+    this.props.dispatch(loadVersions());
   }
 
+  componentWillUnount() {
+    this.props.dispatch(unloadVersions());
+  }
 
   render() {
+    const { error, versions } = this.props;
     const { intl } = this.context;
     
     const services = ['default', 'backend-api'];
@@ -201,16 +209,20 @@ class Versions extends Component {
 }
 
 Versions.defaultProps = {
+  error: undefined,
+  versions: []
 };
 
 Versions.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  error: PropTypes.object,
+  versions: PropTypes.arrayOf(PropTypes.object)
 };
 
 Versions.contextTypes = {
   intl: PropTypes.object
 };
 
-const select = state => ({ ...state.Versions });
+const select = state => ({ ...state.versions });
 
 export default connect(select)(Versions);

@@ -1,7 +1,36 @@
 const _sessions = {};
 const _notifiers = {
+  version: [],
   task: []
 };
+
+
+export const versions = [
+  {
+    id: 'task-1',
+    name: 'Initializing instance',
+    percentComplete: 0,
+    status: 'Waiting'
+  },
+  {
+    id: 'task-2',
+    name: 'Adding components',
+    percentComplete: 0,
+    status: 'Waiting'
+  },
+  {
+    id: 'task-3',
+    name: 'Testing infrastructure',
+    percentComplete: 0,
+    status: 'Waiting'
+  },
+  {
+    id: 'task-4',
+    name: 'Removing instance',
+    percentComplete: 0,
+    status: 'Waiting'
+  }
+];
 
 export const tasks = [
   {
@@ -31,6 +60,44 @@ export const tasks = [
 ];
 
 const increments = [5, 10, 20, 25];
+
+
+setInterval(
+  () => {
+    const version = versions[
+      Math.floor(Math.random() * versions.length)
+    ];
+
+    if (!version.percentComplete) {
+      version.status = 'Running';
+    }
+
+    _notifiers.version.forEach(notifier => notifier(version));
+  },
+  2000
+);
+
+setInterval(
+  () => {
+    versions.forEach((version) => {
+      if (version.status === 'Running') {
+        if (version.percentComplete < 100) {
+          version.percentComplete = Math.min(100, version.percentComplete +
+            increments[
+              Math.floor(Math.random() * increments.length)
+            ]
+          );
+        } else {
+          version.percentComplete = 0;
+          version.status = 'Waiting';
+        }
+        _notifiers.version.forEach(notifier => notifier(version));
+      }
+    });
+  },
+  1000
+);
+
 
 setInterval(
   () => {
@@ -103,4 +170,23 @@ export function getTask(id) {
   return Promise.resolve({ task });
 }
 
-export default { addNotifier, addSession, getSession, getTask, getTasks };
+export function getVersions(filters) {
+  if (filters) {
+    return Promise.resolve({
+      versions: versions.filter(task =>
+        Object.keys(filters).some(filter => task[filter] === filters[filter])
+      )
+    });
+  }
+  return Promise.resolve({ versions });
+}
+
+
+export default {
+  addNotifier,
+  addSession,
+  getSession,
+  getTask,
+  getTasks,
+  getVersions,
+};
