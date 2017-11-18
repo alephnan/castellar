@@ -6,7 +6,6 @@ export function loadVersions() {
     watchVersions()
       .on('success',
         payload => {
-          console.log('payload' + JSON.stringify(payload));
           return dispatch({ type: VERSIONS_LOAD, payload })
         }
       )
