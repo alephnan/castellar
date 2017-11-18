@@ -32,12 +32,4 @@ router.get('/task/:id', (req, res) => {
   });
 });
 
-router.get('/version', (req, res) => {
-  getTasks(req.query).then(tasks => res.json(tasks));
-});
-
-router.delete('/sessions/*', (req, res) => {
-  res.json(undefined);
-});
-
 module.exports = router;
