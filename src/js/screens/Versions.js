@@ -36,7 +36,53 @@ class Versions extends Component {
   render() {
     const { error, versions } = this.props;
     const { intl } = this.context;
-    
+    const rows = versions.map(version => {
+      let status = <Status value='critical' />;
+      if(version.status == 'yellow') {
+        status = <Status value='warning' />;
+      } else if(version.status == 'green') {
+        status = <Status value='ok' />;
+      }
+      return (
+         <TableRow>
+          <td>
+            {version.id}
+          </td>
+          <td>
+            {status}
+          </td>
+          <td>
+            <Value
+              value='30'
+              units='%'
+              align='start'
+              size='small'
+            />
+            <Meter value='30' />
+          </td>
+          <td>
+            {version.instanceCount}
+          </td>
+          <td>
+            {version.runtime}
+          </td>
+          <td>
+            {version.environment}
+          </td>
+          <td>
+            <Button icon={<CloseIcon />}
+              onClick={() => alert('hi')}
+              href='#'
+              primary={false}
+              secondary={false}
+              accent={false}
+              critical={false}
+              plain={false} />
+          </td>
+        </TableRow>
+      );
+    });
+
     const services = ['default', 'backend-api'];
     const serviceSelector = (
       <Select placeHolder='select a service'
@@ -74,114 +120,7 @@ class Versions extends Component {
           </tr>
         </thead>
         <tbody>
-          <TableRow>
-            <td>
-              default
-            </td>
-            <td>
-              <Status value='ok' />
-            </td>
-            <td>
-              <Value
-                value='30'
-                units='%'
-                align='start'
-                size='small'
-              />
-              <Meter value='30' />
-            </td>
-            <td>
-              1
-            </td>
-            <td>
-              python27
-            </td>
-            <td>
-              standard
-            </td>
-            <td>
-              <Button icon={<CloseIcon />}
-                onClick={() => alert('hi')}
-                href='#'
-                primary={false}
-                secondary={false}
-                accent={false}
-                critical={false}
-                plain={false} />
-            </td>
-          </TableRow>
-          <TableRow>
-            <td>
-              backend-api
-            </td>
-            <td>
-              <Status value='warning' />
-            </td>
-            <td>
-              <Value
-                value='50'
-                units='%'
-                align='start'
-                size='small'
-              />
-              <Meter value='50' />
-            </td>
-            <td>
-              0
-            </td>
-            <td>
-              nodej
-            </td>
-            <td>
-              flexible
-            </td>
-            <td>
-              <Button icon={<CloseIcon />}
-                onClick={() => alert('hi')}
-                href='#'
-                primary={false}
-                secondary={false}
-                accent={false}
-                critical={false}
-                plain={false} />
-            </td>
-          </TableRow>
-          <TableRow>
-            <td>
-              backend-api
-            </td>
-            <td>
-              <Status value='critical' />
-            </td>
-            <td>
-              <Value
-                value='20'
-                units='%'
-                align='start'
-                size='small'
-              />
-              <Meter value='20' />
-            </td>
-            <td>
-              0
-            </td>
-            <td>
-              nodej
-            </td>
-            <td>
-              flexible
-            </td>
-            <td>
-              <Button icon={<CloseIcon />}
-                onClick={() => alert('hi')}
-                href='#'
-                primary={false}
-                secondary={false}
-                accent={false}
-                critical={false}
-                plain={false} />
-            </td>
-          </TableRow>
+         {rows}
         </tbody>
       </Table>
     );

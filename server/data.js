@@ -7,28 +7,32 @@ const _notifiers = {
 
 export const versions = [
   {
-    id: 'task-1',
-    name: 'Initializing instance',
-    percentComplete: 0,
-    status: 'Waiting'
+    id: 'default',
+    instanceCount: 0,
+    status: 'green',
+    runtime: 'python27',
+    environment: 'flexible',
   },
   {
-    id: 'task-2',
-    name: 'Adding components',
-    percentComplete: 0,
-    status: 'Waiting'
+    id: 'backend-api',
+    instanceCount: 5,
+    status: 'green',
+    runtime: 'nodejs',
+    environment: 'standard',
   },
   {
-    id: 'task-3',
-    name: 'Testing infrastructure',
-    percentComplete: 0,
-    status: 'Waiting'
+    id: '20170618',
+    instanceCount: 7,
+    status: 'yellow',
+    runtime: 'custom',
+    environment: 'flexible',
   },
   {
-    id: 'task-4',
-    name: 'Removing instance',
-    percentComplete: 0,
-    status: 'Waiting'
+    id: '20170619',
+    instanceCount: 0,
+    status: 'red',
+    runtime: 'go16',
+    environment: 'flexible',
   }
 ];
 
@@ -68,9 +72,9 @@ setInterval(
       Math.floor(Math.random() * versions.length)
     ];
 
-    if (!version.percentComplete) {
-      version.status = 'Running';
-    }
+    const status = Math.floor(3*Math.random());
+    const stati = ['green', 'yellow', 'red'];
+    version.status = stati[status];
 
     _notifiers.version.forEach(notifier => notifier(version));
   },
@@ -80,19 +84,8 @@ setInterval(
 setInterval(
   () => {
     versions.forEach((version) => {
-      if (version.status === 'Running') {
-        if (version.percentComplete < 100) {
-          version.percentComplete = Math.min(100, version.percentComplete +
-            increments[
-              Math.floor(Math.random() * increments.length)
-            ]
-          );
-        } else {
-          version.percentComplete = 0;
-          version.status = 'Waiting';
-        }
-        _notifiers.version.forEach(notifier => notifier(version));
-      }
+      version.instanceCount++;
+      _notifiers.version.forEach(notifier => notifier(version));
     });
   },
   1000
@@ -180,7 +173,6 @@ export function getVersions(filters) {
   }
   return Promise.resolve({ versions });
 }
-
 
 export default {
   addNotifier,
