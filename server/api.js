@@ -1,5 +1,5 @@
 import express from 'express';
-import { addSession, getTasks, getTask , deleteVersion } from './data';
+import { addSession, getTasks, getTask , getVersions, deleteVersion } from './data';
 
 const router = express.Router();
 
@@ -25,6 +25,16 @@ router.get('/task', (req, res) => {
 router.get('/task/:id', (req, res) => {
   getTask(req.params.id).then((result) => {
     if (!result.task) {
+      res.status(404).end();
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+router.get('/version', (req, res) => {
+  getVersions().then((result) => {
+    if (!result.versions) {
       res.status(404).end();
     } else {
       res.json(result);

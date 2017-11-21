@@ -18,7 +18,7 @@ import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
 
-import { loadVersions, unloadVersions , deleteVersion } from '../actions/versions';
+import { loadVersions,  deleteVersion } from '../actions/versions';
 
 import { pageLoaded } from './utils';
 
@@ -27,10 +27,6 @@ class Versions extends Component {
   componentDidMount() {
     pageLoaded('Versions');
     this.props.dispatch(loadVersions());
-  }
-
-  componentWillUnount() {
-    this.props.dispatch(unloadVersions());
   }
 
   render() {

@@ -1,21 +1,15 @@
 import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE } from '../actions';
-import { watchVersions, unwatchVersions , deleteVersion as deleteVersionApi} from '../api/versions';
+import { loadVersions as loadVersionsApi, watchVersions, unwatchVersions , deleteVersion as deleteVersionApi} from '../api/versions';
 
 export function loadVersions() {
-  return dispatch => (
-    watchVersions()
-      .on('success',
-        payload => {
-          return dispatch({ type: VERSIONS_LOAD, payload })
-        }
+  return dispatch =>
+    loadVersionsApi()
+      .then(payload => {
+        dispatch({ type: VERSIONS_LOAD, payload })
+      })
+      .catch(payload =>
+        dispatch({ type: VERSIONS_LOAD, error: true, payload })
       )
-      .on('error',
-        payload => {
-          return dispatch({ type: VERSIONS_LOAD, error: true, payload })
-        }
-      )
-      .start()
-  );
 }
 
 export function unloadVersions() {

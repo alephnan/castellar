@@ -1,6 +1,5 @@
 const _sessions = {};
 const _notifiers = {
-  version: [],
   task: []
 };
 
@@ -64,32 +63,6 @@ export const tasks = [
 ];
 
 const increments = [5, 10, 20, 25];
-
-
-setInterval(
-  () => {
-    const version = versions[
-      Math.floor(Math.random() * versions.length)
-    ];
-
-    const status = Math.floor(3*Math.random());
-    const stati = ['green', 'yellow', 'red'];
-    version.status = stati[status];
-
-    _notifiers.version.forEach(notifier => notifier(version));
-  },
-  2000
-);
-
-setInterval(
-  () => {
-    versions.forEach((version) => {
-      version.instanceCount++;
-      _notifiers.version.forEach(notifier => notifier(version));
-    });
-  },
-  1000
-);
 
 
 setInterval(
