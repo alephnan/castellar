@@ -1,18 +1,21 @@
-import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE, LOADED_VERSIONS_FOR_SERVICE, SERVICE_CHANGE , RESET_TOAST } from '../actions';
+import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE, LOADED_VERSIONS_FOR_SERVICE, SERVICE_SELECTION_CHANGE , RESET_TOAST } from '../actions';
 import { createReducer } from './utils';
 
 const initialState = {
   versions: [],
   version: undefined,
-  selectedService: 'default',
-  loadingVersionsForService: false,
+  selectedService: '*',
+  loadingVersionsForService: true,
 };
 
 const handlers = {
   [VERSIONS_LOAD]: (state, action) => {
     if (!action.error) {
       action.payload.error = undefined;
-      return action.payload;
+      return {
+        versions: action.payload.versions,
+        loadingVersionsForService: false,
+      }
     }
     return { error: action.payload };
   },
@@ -37,9 +40,9 @@ const handlers = {
       loadingVersionsForService: false,
     }
   },
-  [SERVICE_CHANGE]: (state, action) => {
+  [SERVICE_SELECTION_CHANGE]: (state, action) => {
     return {
-      selectedService: action.payload.serviceId,
+      selectedService: action.payload.serviceSelection,
       loadingVersionsForService: true,
     }
   },

@@ -1,3 +1,5 @@
+import {flatMap as _flatMap} from 'lodash'
+
 const _sessions = {};
 const _notifiers = {
   task: []
@@ -90,6 +92,13 @@ const backendVersions = [
   },
   {
     id: 'hik',
+    instanceCount: 0,
+    status: 'red',
+    runtime: 'go16',
+    environment: 'flexible',
+  },
+  {
+    id: 'xyz',
     instanceCount: 0,
     status: 'red',
     runtime: 'go16',
@@ -227,8 +236,10 @@ export function deleteVersion(serviceId, versionId) {
  * @deprecated
  */
 export function getVersions(filters) {
-  // TODO: list versions for all services
-  return getVersionsForService('default');
+  return getServices()
+      .then(({services}) => services.map(({id}) => getVersionsForService(id)))
+      .then(versionPromises => Promise.all(versionPromises))
+      .then(result => ({ versions: _flatMap(result, ({versions}) => versions) }));
 }
 
 export function getVersionsForService(serviceId) {

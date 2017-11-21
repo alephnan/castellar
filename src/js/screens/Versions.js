@@ -35,7 +35,7 @@ class Versions extends Component {
   }
 
   render() {
-    const { error, serviceIds, versionsWithAllocation , servicesLoaded , selectedService , loading , loadingVersionsForService , toastMessageDeletedVersionId } = this.props;
+    const { error, serviceSelections, versionsWithAllocation , servicesLoaded , selectedService , loading , loadingVersionsForService , toastMessageDeletedVersionId } = this.props;
     const { intl } = this.context;
 
     const showToast = !!toastMessageDeletedVersionId;
@@ -115,7 +115,7 @@ class Versions extends Component {
         <Select placeHolder='select a service'
         inline={false}
         multiple={false}
-        options={serviceIds}
+        options={serviceSelections}
         onChange={({value}) => {
           this.props.dispatch(selectService(value))
         }}
@@ -190,7 +190,8 @@ Versions.defaultProps = {
   error: undefined,
   services: [],
   versionsWithAllocation: [],
-  selectedService: 'default',
+  selectedService: '*',
+  serviceSelections: ['*'],
   loadingVersionsForService: false,
   toastMessage: undefined,
 };
@@ -222,7 +223,7 @@ const select = state => {
 
   return {
     selectedService: state.versions.selectedService,
-    serviceIds: state.services.services.map(({id}) => id),
+    serviceSelections: ['*'].concat(state.services.services.map(({id}) => id)),
     versionsWithAllocation,
     servicesLoaded: state.services.services.length > 0,
     loadingVersionsForService,
