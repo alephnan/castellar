@@ -45,6 +45,7 @@ export const versions = [
     status: 'green',
     runtime: 'python27',
     environment: 'flexible',
+    name: '/service/default/version/default',
   },
   {
     id: '20170615',
@@ -52,6 +53,7 @@ export const versions = [
     status: 'green',
     runtime: 'nodejs',
     environment: 'standard',
+    name: '/service/default/version/20170615',
   },
   {
     id: '20170618',
@@ -59,6 +61,7 @@ export const versions = [
     status: 'yellow',
     runtime: 'custom',
     environment: 'flexible',
+    name: '/service/default/version/20170618',
   },
   {
     id: '20170619',
@@ -66,6 +69,7 @@ export const versions = [
     status: 'red',
     runtime: 'go16',
     environment: 'flexible',
+    name: '/service/default/version/20170619',
   }
 ];
 const backendVersions = [
@@ -75,6 +79,7 @@ const backendVersions = [
     status: 'green',
     runtime: 'python27',
     environment: 'flexible',
+    name: '/service/backend-api/version/abcd',
   },
   {
     id: 'def',
@@ -82,6 +87,7 @@ const backendVersions = [
     status: 'green',
     runtime: 'nodejs',
     environment: 'standard',
+    name: '/service/backend-api/version/def',
   },
   {
     id: 'geh',
@@ -89,6 +95,7 @@ const backendVersions = [
     status: 'yellow',
     runtime: 'custom',
     environment: 'flexible',
+    name: '/service/backend-api/version/geh',
   },
   {
     id: 'hik',
@@ -96,6 +103,7 @@ const backendVersions = [
     status: 'red',
     runtime: 'go16',
     environment: 'flexible',
+    name: '/service/backend-api/version/hik',
   },
   {
     id: 'xyz',
@@ -103,6 +111,7 @@ const backendVersions = [
     status: 'red',
     runtime: 'go16',
     environment: 'flexible',
+    name: '/service/backend-api/version/xyz',
   }
 ];
 

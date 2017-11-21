@@ -79,7 +79,7 @@ class Versions extends Component {
       return (
          <TableRow key={version.id}>
           <td>
-            {version.id}
+            {selectedService  == '*' ? version.name.replace('/service/', '').replace('version/', '') : version.id }
           </td>
           <td>
             {status}
@@ -96,9 +96,18 @@ class Versions extends Component {
           </td>
           <td>
             <Button icon={<CloseIcon />}
-              onClick={() => 
-                this.props.dispatch(deleteVersion(selectedService, version.id))
-              }
+              onClick={() => {
+                if(selectedService == '*') {
+                  console.log(version.name);
+                  // Assume version.name has format: /service/:(.*)/version/:(.*)
+                  // and serviceID and versionId cannot contain '/'
+                  const serviceId = version.name.match('^/service/(.*)/version')[1];
+                  const versionId = version.name.split('/version/')[1];
+                  this.props.dispatch(deleteVersion(serviceId, versionId))
+                } else {
+                  this.props.dispatch(deleteVersion(selectedService, version.id))
+                }
+              }}
               href='#'
               primary={false}
               secondary={false}
