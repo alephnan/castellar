@@ -27,6 +27,35 @@ class Services extends Component {
     const { error, services } = this.props;
     const { intl } = this.context;
 
+    const rows = services.map(service => {
+      return (
+        <TableRow key={service.id}>
+          <td>
+            {service.id}
+          </td>
+          <td>
+            5
+          </td>
+          <td>
+            May 9, 2017, 11:56:14 PM
+          </td>
+          <td>
+            service-account@google.com
+          </td>
+          <td>
+            <Button icon={<CloseIcon />}
+              onClick={() => alert('hi')}
+              href='#'
+              primary={false}
+              secondary={false}
+              accent={false}
+              critical={false}
+              plain={false} />
+          </td>
+        </TableRow>
+      );
+    });
+
     const table = (
       <Table scrollable={false}>
         <thead>
@@ -49,54 +78,7 @@ class Services extends Component {
           </tr>
         </thead>
         <tbody>
-          <TableRow>
-            <td>
-              default
-            </td>
-            <td>
-              5
-            </td>
-            <td>
-              May 9, 2017, 11:56:14 PM
-            </td>
-            <td>
-              service-account@google.com
-            </td>
-            <td>
-              <Button icon={<CloseIcon />}
-                onClick={() => alert('hi')}
-                href='#'
-                primary={false}
-                secondary={false}
-                accent={false}
-                critical={false}
-                plain={false} />
-            </td>
-          </TableRow>
-          <TableRow>
-            <td>
-              backend-api
-            </td>
-            <td>
-              7
-            </td>
-            <td>
-              May 31, 2017, 7:24:08 PM
-            </td>
-            <td>
-              freefood@google.com
-            </td>
-            <td>
-              <Button icon={<CloseIcon />}
-                onClick={() => alert('hi')}
-                href='#'
-                primary={false}
-                secondary={false}
-                accent={false}
-                critical={false}
-                plain={false} />
-            </td>
-          </TableRow>
+          {rows}
         </tbody>
       </Table>
     );
