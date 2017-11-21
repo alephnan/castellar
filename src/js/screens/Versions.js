@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import Anchor from 'grommet/components/Anchor';
+import Animate from 'grommet/components/Animate';
 import Article from 'grommet/components/Article';
 import Box from 'grommet/components/Box';
 import Button from 'grommet/components/Button';
@@ -45,7 +46,7 @@ class Versions extends Component {
       }
       let allocationCell = (
         <td>
-          Loading
+          <Spinning /> 
         </td>
       );
       if(servicesLoaded) {
@@ -160,7 +161,11 @@ class Versions extends Component {
           {serviceSelectorBox}
         </Header>
         <Box pad='medium'>
+          <Animate
+            enter={{"animation": "fade", "duration": 1500, "delay": 0}}
+            keep={false}>
           {loadingVersionsForService ? <Spinning /> : table}
+          </Animate>
         </Box>
       </Article>
     );
