@@ -18,7 +18,7 @@ import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
 
-import { loadVersions, unloadVersions } from '../actions/versions';
+import { loadVersions, unloadVersions , deleteVersion } from '../actions/versions';
 
 import { pageLoaded } from './utils';
 
@@ -72,7 +72,9 @@ class Versions extends Component {
           </td>
           <td>
             <Button icon={<CloseIcon />}
-              onClick={() => alert('hi')}
+              onClick={() => 
+                this.props.dispatch(deleteVersion(version.id))
+              }
               href='#'
               primary={false}
               secondary={false}

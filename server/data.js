@@ -163,6 +163,12 @@ export function getTask(id) {
   return Promise.resolve({ task });
 }
 
+export function deleteVersion(id) {
+  const index = versions.findIndex(version => version.id == id);
+  const version = index >= 0 ? versions.splice(index, 1)[0] : null;
+  return Promise.resolve({version});
+}
+
 export function getVersions(filters) {
   if (filters) {
     return Promise.resolve({
@@ -174,9 +180,12 @@ export function getVersions(filters) {
   return Promise.resolve({ versions });
 }
 
+
+
 export default {
   addNotifier,
   addSession,
+  deleteVersion,
   getSession,
   getTask,
   getTasks,

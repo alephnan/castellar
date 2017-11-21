@@ -1,4 +1,4 @@
-import { VERSIONS_LOAD, VERSIONS_UNLOAD } from '../actions';
+import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE} from '../actions';
 import { createReducer } from './utils';
 
 const initialState = {
@@ -15,6 +15,17 @@ const handlers = {
     return { error: action.payload };
   },
   [VERSIONS_UNLOAD]: () => initialState,
+  [VERSION_DELETE]: (state, action) => {
+    if(action.error) {
+      return { error: action.payload}
+    }
+    const {versions} = state;
+    const deletedId = action.payload.version.id;
+    return {
+      versions: versions.filter(({id}) => id !== deletedId)
+    }
+  },
 };
+
 
 export default createReducer(initialState, handlers);

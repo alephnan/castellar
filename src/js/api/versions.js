@@ -1,4 +1,5 @@
 import RequestWatcher from './request-watcher';
+import { headers, parseJSON } from './utils';
 
 let protocol = 'ws:';
 if (window.location.protocol === 'https:') {
@@ -10,16 +11,26 @@ const webSocketUrl = `${protocol}//${host}`;
 
 const socketWatcher = new RequestWatcher({ webSocketUrl });
 
-let tasksWatcher;
+let versionsWatcher;
 
 export function watchVersions() {
-  tasksWatcher = socketWatcher.watch('/api/version');
-  return tasksWatcher;
+  versionsWatcher = socketWatcher.watch('/api/version');
+  return versionsWatcher;
 }
 
 export function unwatchVersions() {
-  if (tasksWatcher) {
-    tasksWatcher.stop();
+  if (versionsWatcher) {
+    versionsWatcher.stop();
   }
 }
 
+export function deleteVersion(id) {
+  const options = {
+    headers: headers(),
+    method: 'DELETE',
+    body: JSON.stringify({ id })
+  };
+
+  return fetch(`/api/version/${id}`, options)
+    .then(parseJSON);
+}
