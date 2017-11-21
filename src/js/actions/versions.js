@@ -1,4 +1,4 @@
-import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE , LOADED_VERSIONS_FOR_SERVICE , SERVICE_CHANGE } from '../actions';
+import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE , LOADED_VERSIONS_FOR_SERVICE , SERVICE_CHANGE , RESET_TOAST } from '../actions';
 import { loadVersions as loadVersionsApi, watchVersions, unwatchVersions , deleteVersion as deleteVersionApi, loadVersionsForService as loadVersionsForServiceApi} from '../api/versions';
 
 export function loadVersions() {
@@ -22,6 +22,7 @@ export function deleteVersion(id) {
   return dispatch => (
     deleteVersionApi(id)
       .then(payload => {
+        dispatch({ type : RESET_TOAST });
         dispatch({ type: VERSION_DELETE, payload });
       })
       .catch(payload => {
@@ -43,5 +44,11 @@ export function selectService(serviceId) {
       .catch(payload => {
 
       })
+  }
+}
+
+export function resetToast() {
+  return dispatch => {
+    dispatch({ type : RESET_TOAST });
   }
 }

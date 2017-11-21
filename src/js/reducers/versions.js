@@ -1,4 +1,4 @@
-import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE, LOADED_VERSIONS_FOR_SERVICE, SERVICE_CHANGE } from '../actions';
+import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE, LOADED_VERSIONS_FOR_SERVICE, SERVICE_CHANGE , RESET_TOAST } from '../actions';
 import { createReducer } from './utils';
 
 const initialState = {
@@ -24,7 +24,8 @@ const handlers = {
     const {versions} = state;
     const deletedId = action.payload.version.id;
     return {
-      versions: versions.filter(({id}) => id !== deletedId)
+      versions: versions.filter(({id}) => id !== deletedId),
+      toastMessageDeletedVersionId: deletedId,
     }
   },
   [LOADED_VERSIONS_FOR_SERVICE]: (state, action) => {
@@ -40,6 +41,11 @@ const handlers = {
     return {
       selectedService: action.payload.serviceId,
       loadingVersionsForService: true,
+    }
+  },
+  [RESET_TOAST]: (state, action) => {
+    return {
+      toastMessageDeletedVersionId: undefined
     }
   },
 };

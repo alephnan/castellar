@@ -15,13 +15,14 @@ import Spinning from 'grommet/components/icons/Spinning';
 import Status from 'grommet/components/icons/Status';
 import Table from 'grommet/components/Table';
 import TableRow from 'grommet/components/TableRow';
+import Toast from 'grommet/components/Toast';
 import Value from 'grommet/components/Value';
 import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
 
 import { loadServices } from '../actions/services';
-import { loadVersions,  deleteVersion , selectService } from '../actions/versions';
+import { loadVersions,  deleteVersion , selectService , resetToast } from '../actions/versions';
 
 import { pageLoaded } from './utils';
 
@@ -34,8 +35,19 @@ class Versions extends Component {
   }
 
   render() {
-    const { error, serviceIds, versionsWithAllocation , servicesLoaded , selectedService , loading , loadingVersionsForService } = this.props;
+    const { error, serviceIds, versionsWithAllocation , servicesLoaded , selectedService , loading , loadingVersionsForService , toastMessageDeletedVersionId } = this.props;
     const { intl } = this.context;
+
+    const showToast = !!toastMessageDeletedVersionId;
+    // TODO: This should be added to DOM outside of the Version Screen, and in the root view instead.
+    const toast = (
+      <Toast status='ok'
+          onClose={() => {
+            this.props.dispatch(resetToast());
+          }}>
+        Deleted version: <em>{toastMessageDeletedVersionId}</em>
+      </Toast>
+    );
 
     const rows = versionsWithAllocation.map(version => {
       let status = <Status value='critical' />;
@@ -151,6 +163,8 @@ class Versions extends Component {
 
     return (
       <Article primary={true}>
+        { showToast ? toast : null}
+
         <Header
           direction='row'
           justify='between'
@@ -178,6 +192,7 @@ Versions.defaultProps = {
   versionsWithAllocation: [],
   selectedService: 'default',
   loadingVersionsForService: false,
+  toastMessage: undefined,
 };
 
 Versions.propTypes = {
@@ -211,6 +226,7 @@ const select = state => {
     versionsWithAllocation,
     servicesLoaded: state.services.services.length > 0,
     loadingVersionsForService,
+    toastMessageDeletedVersionId: state.versions.toastMessageDeletedVersionId
   };
 };
 
