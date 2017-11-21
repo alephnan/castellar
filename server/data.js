@@ -6,11 +6,25 @@ const _notifiers = {
 export const services = [
   {
     id: 'default',
-    allocations: [],
+    allocations: [
+      {
+        id: 'default',
+        allocation: 25,
+      },
+      {
+        id: '20170618',
+        allocation: 75,
+      },
+    ],
   },
   {
     id: 'backend-api',
-    allocations: [],
+    allocations: [
+      {
+        id: '20170619',
+        allocation: 100,
+      }
+    ],
   }
 ];
 
