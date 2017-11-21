@@ -21,8 +21,16 @@ export const services = [
     id: 'backend-api',
     allocations: [
       {
-        id: '20170619',
-        allocation: 100,
+        id: 'abcd',
+        allocation: 13,
+      },
+      {
+        id: 'geh',
+        allocation: 66,
+      },
+      {
+        id: 'geh',
+        allocation: 11,
       }
     ],
   }
@@ -37,7 +45,7 @@ export const versions = [
     environment: 'flexible',
   },
   {
-    id: 'backend-api',
+    id: '20170615',
     instanceCount: 5,
     status: 'green',
     runtime: 'nodejs',
@@ -58,6 +66,40 @@ export const versions = [
     environment: 'flexible',
   }
 ];
+const backendVersions = [
+  {
+    id: 'abcd',
+    instanceCount: 0,
+    status: 'green',
+    runtime: 'python27',
+    environment: 'flexible',
+  },
+  {
+    id: 'def',
+    instanceCount: 5,
+    status: 'green',
+    runtime: 'nodejs',
+    environment: 'standard',
+  },
+  {
+    id: 'geh',
+    instanceCount: 7,
+    status: 'yellow',
+    runtime: 'custom',
+    environment: 'flexible',
+  },
+  {
+    id: 'hik',
+    instanceCount: 0,
+    status: 'red',
+    runtime: 'go16',
+    environment: 'flexible',
+  }
+];
+
+export const servicesVersionsMap = new Map();
+servicesVersionsMap.set('default', versions);
+servicesVersionsMap.set('backend-api', backendVersions);
 
 export const tasks = [
   {
@@ -188,7 +230,9 @@ export function getVersions(filters) {
   return Promise.resolve({ versions });
 }
 
-
+export function getVersionsForService(serviceId) {
+  return Promise.resolve({ versions: servicesVersionsMap.get(serviceId) });
+}
 
 export default {
   addNotifier,
@@ -199,4 +243,5 @@ export default {
   getTask,
   getTasks,
   getVersions,
+  getVersionsForService,
 };

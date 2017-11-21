@@ -1,5 +1,5 @@
-import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE } from '../actions';
-import { loadVersions as loadVersionsApi, watchVersions, unwatchVersions , deleteVersion as deleteVersionApi} from '../api/versions';
+import { VERSIONS_LOAD, VERSIONS_UNLOAD , VERSION_DELETE , LOADED_VERSIONS_FOR_SERVICE , SERVICE_CHANGE } from '../actions';
+import { loadVersions as loadVersionsApi, watchVersions, unwatchVersions , deleteVersion as deleteVersionApi, loadVersionsForService as loadVersionsForServiceApi} from '../api/versions';
 
 export function loadVersions() {
   return dispatch =>
@@ -28,4 +28,20 @@ export function deleteVersion(id) {
         dispatch({ type: VERSION_DELETE, error: true, payload })
       })
   );
+}
+
+
+export function selectService(serviceId) {
+  return dispatch => {
+    dispatch({ type : SERVICE_CHANGE , payload: { serviceId }});
+    loadVersionsForServiceApi(serviceId)
+      .then(payload => {
+        setTimeout(() => {
+          dispatch({ type : LOADED_VERSIONS_FOR_SERVICE, payload: {...payload, serviceId}});
+        }, 1*1000);
+      })
+      .catch(payload => {
+
+      })
+  }
 }

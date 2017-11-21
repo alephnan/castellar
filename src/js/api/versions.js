@@ -20,3 +20,13 @@ export function deleteVersion(id) {
   return fetch(`/api/version/${id}`, options)
     .then(parseJSON);
 }
+
+export function loadVersionsForService(serviceId) {
+  const options = {
+    headers: headers(),
+    method: 'GET',
+  };
+
+  return fetch(`/api/service/${serviceId}/version`, options)
+    .then(parseJSON);
+}

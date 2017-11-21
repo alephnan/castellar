@@ -10,6 +10,7 @@ import Header from 'grommet/components/Header';
 import Heading from 'grommet/components/Heading';
 import Meter from 'grommet/components/Meter';
 import Select from 'grommet/components/Select';
+import Spinning from 'grommet/components/icons/Spinning';
 import Status from 'grommet/components/icons/Status';
 import Table from 'grommet/components/Table';
 import TableRow from 'grommet/components/TableRow';
@@ -19,7 +20,7 @@ import { getMessage } from 'grommet/utils/Intl';
 import NavControl from '../components/NavControl';
 
 import { loadServices } from '../actions/services';
-import { loadVersions,  deleteVersion } from '../actions/versions';
+import { loadVersions,  deleteVersion , selectService } from '../actions/versions';
 
 import { pageLoaded } from './utils';
 
@@ -32,8 +33,9 @@ class Versions extends Component {
   }
 
   render() {
-    const { error, serviceIds, versionsWithAllocation , servicesLoaded } = this.props;
+    const { error, serviceIds, versionsWithAllocation , servicesLoaded , selectedService , loading , loadingVersionsForService } = this.props;
     const { intl } = this.context;
+
     const rows = versionsWithAllocation.map(version => {
       let status = <Status value='critical' />;
       if(version.status == 'yellow') {
@@ -101,7 +103,12 @@ class Versions extends Component {
         inline={false}
         multiple={false}
         options={serviceIds}
-        value={[]}/>
+        onChange={({value}) => {
+          this.props.dispatch(selectService(value))
+        }}
+        value={
+          selectedService
+        }/>
       </Box>
     ) : (
       <Box size='medium'>
@@ -150,11 +157,10 @@ class Versions extends Component {
           pad={{ horizontal: 'medium', between: 'small' }}
         >
         <NavControl name={getMessage(intl, 'Versions')} />
-        {serviceSelectorBox}
+          {serviceSelectorBox}
         </Header>
         <Box pad='medium'>
-
-          {table}
+          {loadingVersionsForService ? <Spinning /> : table}
         </Box>
       </Article>
     );
@@ -165,11 +171,14 @@ Versions.defaultProps = {
   error: undefined,
   services: [],
   versionsWithAllocation: [],
+  selectedService: 'default',
+  loadingVersionsForService: false,
 };
 
 Versions.propTypes = {
   dispatch: PropTypes.func.isRequired,
   error: PropTypes.object,
+  selectedService: PropTypes.string,
   services: PropTypes.arrayOf(PropTypes.object),
   versionsWithAllocation: PropTypes.arrayOf(PropTypes.object),
 };
@@ -180,7 +189,8 @@ Versions.contextTypes = {
 
 
 const select = state => {
-  const serviceId = 'default';
+  const loadingVersionsForService = state.versions.loadingVersionsForService;
+  const serviceId = state.versions.selectedService;
   const service = state.services.services.find(({id}) => id == serviceId);
   const allocationByVersionId = service ? new Map(service.allocations.map(({id, allocation}) => [id, allocation])) : new Map();
   const versionsWithAllocation = state.versions.versions.map(version => {
@@ -190,10 +200,12 @@ const select = state => {
     }
   });
 
-  return { 
+  return {
+    selectedService: state.versions.selectedService,
     serviceIds: state.services.services.map(({id}) => id),
     versionsWithAllocation,
-    servicesLoaded: state.services.services.length > 0
+    servicesLoaded: state.services.services.length > 0,
+    loadingVersionsForService,
   };
 };
 

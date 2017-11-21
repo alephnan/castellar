@@ -13,4 +13,3 @@ export function loadServices() {
         dispatch({ type: SERVICES_LOAD, error: true, payload })
       )
 }
-
