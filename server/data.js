@@ -25,8 +25,8 @@ export const services = [
         allocation: 13,
       },
       {
-        id: 'geh',
-        allocation: 66,
+        id: 'def',
+        allocation: 67,
       },
       {
         id: 'geh',
