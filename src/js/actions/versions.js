@@ -18,9 +18,10 @@ export function unloadVersions() {
 }
 
 
-export function deleteVersion(id) {
+export function deleteVersion(serviceId, versionId) {
+  console.log(serviceId +',, ' + versionId);
   return dispatch => (
-    deleteVersionApi(id)
+    deleteVersionApi(serviceId, versionId)
       .then(payload => {
         dispatch({ type : RESET_TOAST });
         dispatch({ type: VERSION_DELETE, payload });

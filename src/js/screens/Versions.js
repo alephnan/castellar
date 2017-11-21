@@ -97,7 +97,7 @@ class Versions extends Component {
           <td>
             <Button icon={<CloseIcon />}
               onClick={() => 
-                this.props.dispatch(deleteVersion(version.id))
+                this.props.dispatch(deleteVersion(selectedService, version.id))
               }
               href='#'
               primary={false}

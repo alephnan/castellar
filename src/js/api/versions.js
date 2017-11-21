@@ -10,14 +10,14 @@ export function loadVersions() {
     .then(parseJSON);
 }
 
-export function deleteVersion(id) {
+export function deleteVersion(serviceId, versionId) {
   const options = {
     headers: headers(),
     method: 'DELETE',
-    body: JSON.stringify({ id })
+    body: JSON.stringify({ serviceId , versionId })
   };
 
-  return fetch(`/api/version/${id}`, options)
+  return fetch(`/api/service/${serviceId}/version/${versionId}`, options)
     .then(parseJSON);
 }
 

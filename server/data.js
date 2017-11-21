@@ -213,21 +213,22 @@ export function getServices(filters) {
   return Promise.resolve({ services });
 }
 
-export function deleteVersion(id) {
-  const index = versions.findIndex(version => version.id == id);
+export function deleteVersion(serviceId, versionId) {
+  if(!servicesVersionsMap.has(serviceId)) {
+    return Promise.resolve({ version: undefined});
+  }
+  const versions = servicesVersionsMap.get(serviceId);
+  const index = versions.findIndex(({id}) => id == versionId);
   const version = index >= 0 ? versions.splice(index, 1)[0] : null;
   return Promise.resolve({version});
 }
 
+/**
+ * @deprecated
+ */
 export function getVersions(filters) {
-  if (filters) {
-    return Promise.resolve({
-      versions: versions.filter(task =>
-        Object.keys(filters).some(filter => task[filter] === filters[filter])
-      )
-    });
-  }
-  return Promise.resolve({ versions });
+  // TODO: list versions for all services
+  return getVersionsForService('default');
 }
 
 export function getVersionsForService(serviceId) {

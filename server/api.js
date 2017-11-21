@@ -63,8 +63,9 @@ router.get('/version', (req, res) => {
   });
 });
 
-router.delete('/version/:id', (req, res) => {
-  deleteVersion(req.params.id).then((result) => {
+router.delete('/service/:serviceId/version/:versionId', (req, res) => {
+  const { serviceId, versionId } = req.params;
+  deleteVersion(serviceId, versionId).then((result) => {
     if (!result.version) {
       res.status(404).end();
     } else {
@@ -72,5 +73,6 @@ router.delete('/version/:id', (req, res) => {
     }
   });
 });
+
 
 module.exports = router;
