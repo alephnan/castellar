@@ -24,3 +24,6 @@ export const NAV_RESPONSIVE = 'NAV_RESPONSIVE';
 export const VERSIONS_LOAD = 'VERSIONS_LOAD';
 export const VERSIONS_UNLOAD = 'VERSIONS_UNLOAD';
 export const VERSION_DELETE = 'VERSION_DELETE';
+
+// Services
+export const SERVICES_LOAD = 'SERVICES_LOAD';

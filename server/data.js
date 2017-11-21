@@ -3,6 +3,16 @@ const _notifiers = {
   task: []
 };
 
+export const services = [
+  {
+    id: 'default',
+    allocations: [],
+  },
+  {
+    id: 'backend-api',
+    allocations: [],
+  }
+];
 
 export const versions = [
   {
@@ -136,6 +146,17 @@ export function getTask(id) {
   return Promise.resolve({ task });
 }
 
+export function getServices(filters) {
+  if (filters) {
+    return Promise.resolve({
+      services: services.filter(service =>
+        Object.keys(filters).some(filter => service[filter] === filters[filter])
+      )
+    });
+  }
+  return Promise.resolve({ services });
+}
+
 export function deleteVersion(id) {
   const index = versions.findIndex(version => version.id == id);
   const version = index >= 0 ? versions.splice(index, 1)[0] : null;
@@ -160,6 +181,7 @@ export default {
   addSession,
   deleteVersion,
   getSession,
+  getServices,
   getTask,
   getTasks,
   getVersions,

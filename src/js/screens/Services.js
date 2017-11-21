@@ -12,7 +12,7 @@ import Table from 'grommet/components/Table';
 import TableRow from 'grommet/components/TableRow';
 import { getMessage } from 'grommet/utils/Intl';
 
-
+import { loadServices } from '../actions/services';
 import NavControl from '../components/NavControl';
 
 import { pageLoaded } from './utils';
@@ -20,9 +20,11 @@ import { pageLoaded } from './utils';
 class Services extends Component {
   componentDidMount() {
     pageLoaded('Services');
+    this.props.dispatch(loadServices());
   }
 
   render() {
+    const { error, services } = this.props;
     const { intl } = this.context;
 
     const table = (
@@ -118,16 +120,20 @@ class Services extends Component {
 }
 
 Services.defaultProps = {
+  error: undefined,
+  services: [],
 };
 
 Services.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  error: PropTypes.object,
+  services: PropTypes.arrayOf(PropTypes.object),
 };
 
 Services.contextTypes = {
-  intl: PropTypes.object
+  intl: PropTypes.object,
 };
 
-const select = state => ({ ...state.services });
+const select = state => ({ ...state.services , ...state.error});
 
 export default connect(select)(Services);
