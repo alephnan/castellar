@@ -44,7 +44,7 @@ class Versions extends Component {
         status = <Status value='ok' />;
       }
       return (
-         <TableRow>
+         <TableRow key={version.id}>
           <td>
             {version.id}
           </td>
@@ -52,13 +52,14 @@ class Versions extends Component {
             {status}
           </td>
           <td>
-            <Value
-              value='30'
+            <Value value={30}
               units='%'
               align='start'
               size='small'
             />
-            <Meter value='30' />
+            <Meter vertical={false}
+              value={30}
+            />
           </td>
           <td>
             {version.instanceCount}
@@ -88,7 +89,6 @@ class Versions extends Component {
       <Select placeHolder='select a service'
         inline={false}
         multiple={false}
-        onSearch={false}
         options={services}
         value={[]}/>
     );
