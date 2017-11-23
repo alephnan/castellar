@@ -70,7 +70,8 @@ if (env === 'production') {
     },
     historyApiFallback: true,
     proxy: {
-      '/api/*': 'http://localhost:8102'
+      '/api/*': 'http://localhost:8102',
+      '/auth/*': 'http://localhost:8102'
     }
   };
 }
