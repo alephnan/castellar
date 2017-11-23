@@ -1,1 +1,5 @@
 node_modules/
+server/secrets.js
+dist/
+dist-server/
+package-lock.json

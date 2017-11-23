@@ -6,8 +6,10 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import api from './api';
+import auth from './auth';
 import { addNotifier, getTasks, getTask } from './data';
 import Notifier from './notifier';
+import passport from 'passport';
 
 const PORT = process.env.PORT || 8102;
 
@@ -45,6 +47,11 @@ const app = express()
 
 // REST API
 app.use('/api', api);
+
+// Authentication
+app.use(passport.initialize());
+app.use(passport.session());
+app.use('/auth', auth);
 
 // UI
 app.use('/', express.static(path.join(__dirname, '/../dist')));
