@@ -35,22 +35,34 @@ const scopes = [
 ];
 
 router.get('/google',
-  passport.authenticate('google', { scope: [] }), 
+  passport.authenticate('google', { scope: scopes }), 
   (req, res, next) => {
-    console.log('return' + req.query.return);
     if (req.query.return) {
       req.session.oauth2return = req.query.return;
     }  
     next();
   });
 
-router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
+
+
+// Handler for google auth callback route depends on dev-environment.
+const googleCallbackRouteHandler = (function(isDev) {
+  // dev client runs on different localhost then dev server.
+  const devClientPort = 3000;
+  const redirectRelativePath = '/dashboard';
+  // client and server on same port in production environment.
+  const redirectPath = isDev ? `http://localhost:${devClientPort}${redirectRelativePath}` : redirectRelativePath;
+  return function(req, res) {
     const redirect = req.session.oauth2return || '/';
     delete req.session.oauth2return;
     // Successful authentication, redirect home.
-    res.redirect('/dashboard');
-  });
+    res.redirect(redirectPath);
+  };
+})(process.env.NODE_ENV == 'development');
+
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  googleCallbackRouteHandler);
+
 
 module.exports = router;
