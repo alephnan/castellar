@@ -241,9 +241,7 @@ export function deleteVersion(serviceId, versionId) {
   return Promise.resolve({version});
 }
 
-/**
- * @deprecated
- */
+// Gets versions for all services.
 export function getVersions(filters) {
   return getServices()
       .then(({services}) => services.map(({id}) => getVersionsForService(id)))
