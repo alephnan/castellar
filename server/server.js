@@ -4,12 +4,14 @@ import http from 'http';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import path from 'path';
 import api from './api';
 import auth from './auth';
 import { addNotifier, getTasks, getTask } from './data';
 import Notifier from './notifier';
 import passport from 'passport';
+
 
 const PORT = process.env.PORT || 8102;
 
@@ -43,15 +45,23 @@ const app = express()
   .use(compression())
   .use(cookieParser())
   .use(morgan('tiny'))
-  .use(bodyParser.json());
-
-// REST API
-app.use('/api', api);
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({
+	  extended: true
+  }))
+  .use(session({
+    secret: 'anything',
+    resave: true,
+    saveUninitialized: true,
+  }))
 
 // Authentication
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth', auth);
+
+// REST API
+app.use('/api', api);
 
 // UI
 app.use('/', express.static(path.join(__dirname, '/../dist')));
