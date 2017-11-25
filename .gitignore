@@ -4,3 +4,4 @@ dist/
 dist-server/
 package-lock.json
 .eslintcache
+npm-debug.log
