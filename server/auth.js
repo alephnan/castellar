@@ -1,41 +1,12 @@
 import express from 'express';
-import fs from 'fs';
-import jsonfile from 'jsonfile';
 import passport from 'passport';
 import {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI} from './secrets';
 import {Strategy as GoogleStrategy} from 'passport-google-oauth20';
+import {refreshStore as googleRefreshTokenStore} from './google_token_store';
 
 const router = express.Router();
 
-// TODO: Persist to Memcached instead of flat file.
-class GoogleRefreshTokenStore {
-  constructor() {
-    this.filePath = '/tmp/data.json';
-  }
 
-  set(id, refreshToken) {
-    const obj = fs.existsSync(this.filePath) ? jsonfile.readFileSync(this.filePath) : {};
-    obj[id] = refreshToken;
-    jsonfile.writeFileSync(this.filePath, obj);
-  }
-
-  get(id) {
-    if(!fs.existsSync(this.filePath)) {
-      return null;
-    }
-    const obj = jsonfile.readFileSync(this.filePath);
-    return obj[id];
-  }
-
-  has(id) {
-    if(!fs.existsSync(this.filePath)) {
-      return false;
-    }
-    const obj = jsonfile.readFileSync(this.filePath);
-    return !!obj[id];
-  }
-}
-const googleRefreshTokenStore = new GoogleRefreshTokenStore();
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
