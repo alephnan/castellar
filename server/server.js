@@ -43,17 +43,20 @@ notifier.use('/api/task/:id', param => (
 
 const app = express()
   .use(compression())
+   // TODO: Need to use same secret as session?
   .use(cookieParser())
   .use(morgan('tiny'))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({
 	  extended: true
   }))
+  // TODO: use CORS
+  // TODO: re-evaluate this configuration.
   .use(session({
     secret: 'anything',
     resave: true,
     saveUninitialized: true,
-  }))
+  }));
 
 // Authentication
 app.use(passport.initialize());
