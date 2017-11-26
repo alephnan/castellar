@@ -1,7 +1,25 @@
 import express from 'express';
 import { addSession, getTasks, getTask , getServices, getVersions, deleteVersion , getVersionsForService } from './data';
+import {refreshStore as googleRefreshTokenStore, accessStore as googleAccessTokenStore } from './google_token_store';
 
 const router = express.Router();
+
+// Middleware to get user's OAUTH tokens to use in GAPI call.
+router.use('/', (req, res, next) => {
+  if(!req.user || !req.user.id) {
+    res.status(401).end();
+    return;
+    // TODO: Handle on client. Redirect or link to login.
+  }
+  if (!googleRefreshTokenStore.has(req.user.id)) {
+    res.status(403).end();
+    return;
+    // TODO: Handle on client. Redirect or link to consent.
+  }
+  const refreshToken = googleRefreshTokenStore.get(req.user.id);
+  res.locals.accessToken = googleAccessTokenStore.get(refreshToken);
+  next();
+});
 
 router.post('/sessions', (req, res) => {
   const { email, password } = req.body;
@@ -54,6 +72,8 @@ router.get('/service/:serviceId/version', (req, res) => {
 });
 
 router.get('/version', (req, res) => {
+  const {accessToken} = res.locals;
+  // TODO: Use access token to make API call.
   getVersions().then((result) => {
     if (!result.versions) {
       res.status(404).end();

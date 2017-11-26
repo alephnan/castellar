@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI} from './secrets';
 import {Strategy as GoogleStrategy} from 'passport-google-oauth20';
-import {refreshStore as googleRefreshTokenStore} from './google_token_store';
+import {refreshStore as googleRefreshTokenStore, accessStore as googleAccessTokenStore} from './google_token_store';
 
 const router = express.Router();
 
@@ -15,13 +15,20 @@ passport.use(new GoogleStrategy({
   },
   function(accessToken, refreshToken, profile, cb) {
     const googleId = profile.id;
+    // Get new refresh token.
+    if (!refreshToken && !googleRefreshTokenStore.has(googleId)) {
+       return cb(null, false);
+    }
     // Save refresh token.
     if(refreshToken) {
       googleRefreshTokenStore.set(googleId, refreshToken);
-    } else if (!googleRefreshTokenStore.has(googleId)) {
-      // Get new refresh token.
-       return cb(null, false);
+    } else {
+      refreshToken = googleRefreshTokenStore.get(googleId);
     }
+    googleAccessTokenStore.set(refreshToken, {
+      accessToken,
+      expiration: 'foo',
+    });
     const user = {id: googleId};
     return cb(null, user);
   }
