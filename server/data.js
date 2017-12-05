@@ -108,7 +108,19 @@ export function getTask(id) {
   return Promise.resolve({ task });
 }
 
+export function listProjects(accessToken) {
+  const path = 'https://cloudresourcemanager.googleapis.com/v1/projects';
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  };
+  return axios(path, config).then(response => ({ projects: response.data.projects }));
+  // TODO: handle 403, API not enabled errors.
+}
+
 export function getServices(accessToken, pid) {
+  listProjects(accessToken);
   const path = `https://appengine.googleapis.com/v1/apps/${pid}/services`;
   const config = {
     headers: {

@@ -1,5 +1,14 @@
 import express from 'express';
-import { addSession, getTasks, getTask, getServices, getVersions, deleteVersion, getVersionsForService } from './data';
+import {
+  addSession,
+  getTasks,
+  getTask,
+  getServices,
+  getVersions,
+  deleteVersion,
+  getVersionsForService,
+  listProjects,
+} from './data';
 import { refreshStore as googleRefreshTokenStore, accessStore as googleAccessTokenStore } from './google_token_store';
 import { GCP_PROJECT_ID } from './secrets';
 
@@ -44,6 +53,18 @@ router.get('/task', (req, res) => {
 router.get('/task/:id', (req, res) => {
   getTask(req.params.id).then((result) => {
     if (!result.task) {
+      res.status(404).end();
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+
+router.get('/project', (req, res) => {
+  const { accessToken } = res.locals;
+  listProjects(accessToken).then((result) => {
+    if (!result.projects) {
       res.status(404).end();
     } else {
       res.json(result);
