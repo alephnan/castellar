@@ -28,6 +28,7 @@ class Versions extends Component {
     pageLoaded('Versions');
     this.props.dispatch(loadServices());
     this.props.dispatch(loadVersions());
+    this.props.dispatch(selectService('*'));
   }
 
   render() {
