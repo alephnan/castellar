@@ -1,6 +1,7 @@
 import express from 'express';
 import { addSession, getTasks, getTask , getServices, getVersions, deleteVersion , getVersionsForService } from './data';
 import {refreshStore as googleRefreshTokenStore, accessStore as googleAccessTokenStore } from './google_token_store';
+import {GCP_PROJECT_ID} from './secrets';
 
 const router = express.Router();
 
@@ -51,7 +52,8 @@ router.get('/task/:id', (req, res) => {
 });
 
 router.get('/service', (req, res) => {
-  getServices().then((result) => {
+  const {accessToken} = res.locals;
+  getServices(accessToken, GCP_PROJECT_ID).then((result) => {
     if (!result.services) {
       res.status(404).end();
     } else {
@@ -61,8 +63,9 @@ router.get('/service', (req, res) => {
 });
 
 router.get('/service/:serviceId/version', (req, res) => {
+  const {accessToken} = res.locals;
   const serviceId = req.params.serviceId;
-  getVersionsForService(serviceId).then((result) => {
+  getVersionsForService(accessToken, GCP_PROJECT_ID, serviceId).then((result) => {
     if (!result.versions) {
       res.status(404).end();
     } else {
@@ -73,8 +76,7 @@ router.get('/service/:serviceId/version', (req, res) => {
 
 router.get('/version', (req, res) => {
   const {accessToken} = res.locals;
-  // TODO: Use access token to make API call.
-  getVersions().then((result) => {
+  getVersions(accessToken, GCP_PROJECT_ID).then((result) => {
     if (!result.versions) {
       res.status(404).end();
     } else {

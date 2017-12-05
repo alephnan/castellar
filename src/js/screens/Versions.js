@@ -51,9 +51,7 @@ class Versions extends Component {
 
     const rows = versionsWithAllocation.map(version => {
       let status = <Status value='critical' />;
-      if(version.status == 'yellow') {
-        status = <Status value='warning' />;
-      } else if(version.status == 'green') {
+      if(version.servingStatus == 'SERVING') {
         status = <Status value='ok' />;
       }
       let allocationCell = (
@@ -98,7 +96,6 @@ class Versions extends Component {
             <Button icon={<CloseIcon />}
               onClick={() => {
                 if(selectedService == '*') {
-                  console.log(version.name);
                   // Assume version.name has format: /service/:(.*)/version/:(.*)
                   // and serviceID and versionId cannot contain '/'
                   const serviceId = version.name.match('^/service/(.*)/version')[1];

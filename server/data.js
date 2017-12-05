@@ -1,114 +1,11 @@
 import {flatMap as _flatMap} from 'lodash'
+import axios from 'axios';
 
 const _sessions = {};
 const _notifiers = {
   task: []
 };
 
-export const services = [
-  {
-    id: 'default',
-    split: {
-      allocations:
-        {
-          'default': .25,
-          '20170618': .75,
-        },
-    }
-  },
-  {
-    id: 'backend-api',
-    split: {
-      allocations:
-        {
-          'abcd': .13,
-          'def': .67,
-          'geh': .11,
-        },
-    }
-  },
-];
-
-export const versions = [
-  {
-    id: 'default',
-    instanceCount: 0,
-    status: 'green',
-    runtime: 'python27',
-    environment: 'flexible',
-    name: '/service/default/version/default',
-  },
-  {
-    id: '20170615',
-    instanceCount: 5,
-    status: 'green',
-    runtime: 'nodejs',
-    environment: 'standard',
-    name: '/service/default/version/20170615',
-  },
-  {
-    id: '20170618',
-    instanceCount: 7,
-    status: 'yellow',
-    runtime: 'custom',
-    environment: 'flexible',
-    name: '/service/default/version/20170618',
-  },
-  {
-    id: '20170619',
-    instanceCount: 0,
-    status: 'red',
-    runtime: 'go16',
-    environment: 'flexible',
-    name: '/service/default/version/20170619',
-  }
-];
-const backendVersions = [
-  {
-    id: 'abcd',
-    instanceCount: 0,
-    status: 'green',
-    runtime: 'python27',
-    environment: 'flexible',
-    name: '/service/backend-api/version/abcd',
-  },
-  {
-    id: 'def',
-    instanceCount: 5,
-    status: 'green',
-    runtime: 'nodejs',
-    environment: 'standard',
-    name: '/service/backend-api/version/def',
-  },
-  {
-    id: 'geh',
-    instanceCount: 7,
-    status: 'yellow',
-    runtime: 'custom',
-    environment: 'flexible',
-    name: '/service/backend-api/version/geh',
-  },
-  {
-    id: 'hik',
-    instanceCount: 0,
-    status: 'red',
-    runtime: 'go16',
-    environment: 'flexible',
-    name: '/service/backend-api/version/hik',
-  },
-  {
-    id: 'xyz',
-    instanceCount: 0,
-    status: 'red',
-    runtime: 'go16',
-    environment: 'flexible',
-    name: '/service/backend-api/version/xyz',
-  }
-];
-
-export const servicesVersionsMap = new Map();
-servicesVersionsMap.set('default', versions);
-servicesVersionsMap.set('backend-api', backendVersions);
 
 export const tasks = [
   {
@@ -211,37 +108,57 @@ export function getTask(id) {
   return Promise.resolve({ task });
 }
 
-export function getServices(filters) {
-  if (filters) {
-    return Promise.resolve({
-      services: services.filter(service =>
-        Object.keys(filters).some(filter => service[filter] === filters[filter])
-      )
-    });
-  }
-  return Promise.resolve({ services });
-}
+export function getServices(accessToken, pid) {
+  const path = `https://appengine.googleapis.com/v1/apps/${pid}/services`;
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  };
+  return axios(path, config).then(response => {
+    return {
+      services: response.data.services,
+    };
+  });
+};
 
 export function deleteVersion(serviceId, versionId) {
-  if(!servicesVersionsMap.has(serviceId)) {
-    return Promise.resolve({ version: undefined});
-  }
-  const versions = servicesVersionsMap.get(serviceId);
-  const index = versions.findIndex(({id}) => id == versionId);
-  const version = index >= 0 ? versions.splice(index, 1)[0] : null;
-  return Promise.resolve({version});
+  // TODO: Reimplement against Admin API.
+  // if(!servicesVersionsMap.has(serviceId)) {
+  //   return Promise.resolve({ version: undefined});
+  // }
+  // const versions = servicesVersionsMap.get(serviceId);
+  // const index = versions.findIndex(({id}) => id == versionId);
+  // const version = index >= 0 ? versions.splice(index, 1)[0] : null;
+  // return Promise.resolve({version});
+  return Promise.resolve();
 }
 
 // Gets versions for all services.
-export function getVersions(filters) {
-  return getServices()
-      .then(({services}) => services.map(({id}) => getVersionsForService(id)))
+export function getVersions(accessToken, pid) {
+  return getServices(accessToken, pid)
+      .then(({services}) => Promise.all(services.map(({id}) => getVersionsForService(accessToken, pid, id))))
       .then(versionPromises => Promise.all(versionPromises))
       .then(result => ({ versions: _flatMap(result, ({versions}) => versions) }));
 }
 
-export function getVersionsForService(serviceId) {
-  return Promise.resolve({ versions: servicesVersionsMap.get(serviceId) });
+export function getVersionsForService(accessToken, pid, serviceId) {
+  const path = `https://appengine.googleapis.com/v1/apps/${pid}/services/${serviceId}/versions`;
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  };
+  return axios(path, config).then(response => {
+    const versions =  response.data.versions.map(v => {
+      // TODO: get real count
+      v.instanceCount = 0;
+      return v;
+    });
+    return {
+      versions
+    };
+  });
 }
 
 export default {
