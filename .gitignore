@@ -5,3 +5,5 @@ dist-server/
 package-lock.json
 .eslintcache
 npm-debug.log
+__tests__/components/__snapshots__/
+coverage/
