@@ -222,11 +222,11 @@ const select = state => {
   const loadingVersionsForService = state.versions.loadingVersionsForService;
   const serviceId = state.versions.selectedService;
   const service = state.services.services.find(({id}) => id == serviceId);
-  const allocationByVersionId = service ? new Map(service.allocations.map(({id, allocation}) => [id, allocation])) : new Map();
+  const allocationByVersionId = service ? new Map(Object.entries(service.split.allocations)) : new Map();
   const versionsWithAllocation = state.versions.versions.map(version => {
     return {
       ...version,
-      allocation: allocationByVersionId.get(version.id) || 0
+      allocation: 100*allocationByVersionId.get(version.id) || 0
     }
   });
 

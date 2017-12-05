@@ -8,34 +8,25 @@ const _notifiers = {
 export const services = [
   {
     id: 'default',
-    allocations: [
-      {
-        id: 'default',
-        allocation: 25,
-      },
-      {
-        id: '20170618',
-        allocation: 75,
-      },
-    ],
+    split: {
+      allocations:
+        {
+          'default': .25,
+          '20170618': .75,
+        },
+    }
   },
   {
     id: 'backend-api',
-    allocations: [
-      {
-        id: 'abcd',
-        allocation: 13,
-      },
-      {
-        id: 'def',
-        allocation: 67,
-      },
-      {
-        id: 'geh',
-        allocation: 11,
-      }
-    ],
-  }
+    split: {
+      allocations:
+        {
+          'abcd': .13,
+          'def': .67,
+          'geh': .11,
+        },
+    }
+  },
 ];
 
 export const versions = [
