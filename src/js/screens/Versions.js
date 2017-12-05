@@ -93,7 +93,7 @@ class Versions extends Component {
             {version.runtime}
           </td>
           <td>
-            {version.environment}
+            {version.env}
           </td>
           <td>
             <Button icon={<CloseIcon />}
