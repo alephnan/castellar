@@ -1,7 +1,11 @@
 // (C) Copyright 2014-2015 Hewlett Packard Enterprise Development LP
 
 import {
-  NAV_ACTIVATE, NAV_ENABLE, NAV_RESPONSIVE
+  NAV_ACTIVATE,
+  NAV_ENABLE,
+  NAV_RESPONSIVE,
+  PROJECTS_LOAD,
+  PROJECT_SELECTION_CHANGE,
 } from '../actions';
 
 import { createReducer } from './utils';
@@ -16,7 +20,8 @@ const initialState = {
     { path: '/services', label: 'Services' },
     { path: '/versions', label: 'Versions' },
     { path: '/instances', label: 'Instances' },
-  ]
+  ],
+  selectedProject: null,
 };
 
 const handlers = {
@@ -37,7 +42,23 @@ const handlers = {
       result.active = true;
     }
     return result;
-  }
+  },
+  [PROJECT_SELECTION_CHANGE]: (state, action) => ({
+    selectedProject: action.payload.projectSelection,
+  }),
+  [PROJECTS_LOAD]: (state, action) => {
+    if (!action.error) {
+      action.payload.error = undefined;
+      const projects = action.payload.projects;
+      // Default to first project.
+      const selectedProject = projects[0].projectId;
+      return {
+        selectedProject,
+      };
+    }
+    return { error: action.payload };
+  },
+
 };
 
 export default createReducer(initialState, handlers);

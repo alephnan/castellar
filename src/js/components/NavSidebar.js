@@ -7,12 +7,15 @@ import Footer from 'grommet/components/Footer';
 import Title from 'grommet/components/Title';
 import Menu from 'grommet/components/Menu';
 import Button from 'grommet/components/Button';
+import Select from 'grommet/components/Select';
 import CloseIcon from 'grommet/components/icons/base/Close';
 import Logo from 'grommet/components/icons/Grommet';
 import Anchor from 'grommet/components/Anchor';
 
 import SessionMenu from './SessionMenu';
-import { navActivate } from '../actions/nav';
+import { navActivate, selectProject } from '../actions/nav';
+import { loadProjects } from '../actions/projects';
+
 
 class NavSidebar extends Component {
   constructor() {
@@ -20,17 +23,34 @@ class NavSidebar extends Component {
     this._onClose = this._onClose.bind(this);
   }
 
+  componentDidMount() {
+    this.props.dispatch(loadProjects());
+  }
+
   _onClose() {
     this.props.dispatch(navActivate(false));
   }
 
   render() {
-    const { nav: { items } } = this.props;
+    const { nav: { items }, projectIds, selectedProject } = this.props;
 
     const links = items.map(page => (
       <Anchor key={page.label} path={page.path} label={page.label} />
     ));
 
+    let projectSelector = null;
+    if (selectedProject) {
+      projectSelector = (
+        <Select placeHolder='select a service'
+          inline={false}
+          multiple={false}
+          options={projectIds}
+          onChange={({ value }) => {
+            this.props.dispatch(selectProject(value));
+          }}
+          value={selectedProject} />
+      );
+    }
     return (
       <Sidebar colorIndex='neutral-4-a' fixed={true}>
         <Header size='large' justify='between' pad={{ horizontal: 'medium' }}>
@@ -45,6 +65,7 @@ class NavSidebar extends Component {
             a11yTitle='Close Menu'
           />
         </Header>
+        {projectSelector}
         <Menu fill={true} primary={true}>
           {links}
         </Menu>
@@ -61,7 +82,9 @@ NavSidebar.defaultProps = {
     active: true, // start with nav active
     enabled: true, // start with nav disabled
     responsive: 'multiple'
-  }
+  },
+  projectIds: [],
+  selectedProject: null,
 };
 
 NavSidebar.propTypes = {
@@ -71,11 +94,18 @@ NavSidebar.propTypes = {
       path: PropTypes.string,
       label: PropTypes.string
     }))
-  })
+  }),
+  projectIds: PropTypes.arrayOf(PropTypes.string),
+  selectedProject: PropTypes.string,
 };
 
-const select = state => ({
-  nav: state.nav
-});
-
+const select = (state) => {
+  const selectedProject = state.nav.selectedProject;
+  const projectIds = state.projects.projects.map(({ projectId }) => projectId);
+  return {
+    nav: state.nav,
+    projectIds,
+    selectedProject,
+  };
+};
 export default connect(select)(NavSidebar);

@@ -19,6 +19,10 @@ export const TASK_UNLOAD = 'TASK_UNLOAD';
 export const NAV_ACTIVATE = 'NAV_ACTIVATE';
 export const NAV_ENABLE = 'NAV_ENABLE';
 export const NAV_RESPONSIVE = 'NAV_RESPONSIVE';
+export const PROJECT_SELECTION_CHANGE = 'PROJECT_SELECTION_CHANGE';
+
+// GCP Projects
+export const PROJECTS_LOAD = 'PROJECTS_LOAD';
 
 // Versions
 export const VERSIONS_LOAD = 'VERSIONS_LOAD';
