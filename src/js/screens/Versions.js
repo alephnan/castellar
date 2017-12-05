@@ -58,28 +58,37 @@ class Versions extends Component {
       if (version.servingStatus === 'SERVING') {
         status = <Status value='ok' />;
       }
-      let allocationCell = null;
-      if (selectedService !== '*') {
+      if (selectedService === '*') {
+        return (
+          <TableRow key={version.id}>
+            <td>
+              {selectedService === '*' ? version.name.replace('/service/', '').replace('version/', '') : version.id }
+            </td>
+            <td>
+              {status}
+            </td>
+          </TableRow>
+        );
+      }
+      let allocationCell = (
+        <td>
+          <Spinning />
+        </td>
+      );
+      if (servicesLoaded) {
+        const allocation = version.allocation;
         allocationCell = (
           <td>
-            <Spinning />
+            <Value value={allocation}
+              units='%'
+              align='start'
+              size='small'
+            />
+            <Meter vertical={false}
+              value={allocation}
+            />
           </td>
         );
-        if (servicesLoaded) {
-          const allocation = version.allocation;
-          allocationCell = (
-            <td>
-              <Value value={allocation}
-                units='%'
-                align='start'
-                size='small'
-              />
-              <Meter vertical={false}
-                value={allocation}
-              />
-            </td>
-          );
-        }
       }
       return (
         <TableRow key={version.id}>
@@ -143,22 +152,10 @@ class Versions extends Component {
         <thead>
           <tr>
             <th>
-              Id
+              Name
             </th>
             <th>
               Status
-            </th>
-            <th>
-              Instances Count
-            </th>
-            <th>
-              Runtime
-            </th>
-            <th>
-              Environment
-            </th>
-            <th>
-              {/* Delete button column placeholder. */}
             </th>
           </tr>
         </thead>
