@@ -54,25 +54,28 @@ class Versions extends Component {
       if(version.servingStatus == 'SERVING') {
         status = <Status value='ok' />;
       }
-      let allocationCell = (
-        <td>
-          <Spinning /> 
-        </td>
-      );
-      if(servicesLoaded) {
-        const allocation = version.allocation;
+      let allocationCell = null;
+      if(selectedService != '*') {
         allocationCell = (
           <td>
-            <Value value={allocation}
-              units='%'
-              align='start'
-              size='small'
-            />
-            <Meter vertical={false}
-              value={allocation}
-            />
+            <Spinning />
           </td>
         );
+        if(servicesLoaded) {
+          const allocation = version.allocation;
+          allocationCell = (
+            <td>
+              <Value value={allocation}
+                units='%'
+                align='start'
+                size='small'
+              />
+              <Meter vertical={false}
+                value={allocation}
+              />
+            </td>
+          );
+        }
       }
       return (
          <TableRow key={version.id}>
@@ -134,8 +137,35 @@ class Versions extends Component {
       </Box>
     );
 
-    const table = (
-      <Table scrollable={false}>
+    const table = selectedService == '*' ? 
+      (<Table scrollable={false}>
+        <thead>
+          <tr>
+            <th>
+              Id
+            </th>
+            <th>
+              Status
+            </th>
+            <th>
+              Instances Count
+            </th>
+            <th>
+              Runtime
+            </th>
+            <th>
+              Environment
+            </th>
+            <th>
+              {/* Delete button column placeholder. */}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+         {rows}
+        </tbody>
+      </Table>) :
+       (<Table scrollable={false}>
         <thead>
           <tr>
             <th>
