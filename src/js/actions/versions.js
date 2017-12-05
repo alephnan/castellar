@@ -38,9 +38,7 @@ export function selectService(serviceSelection) {
       const serviceId = serviceSelection;
       loadVersionsForServiceApi(serviceId)
         .then(payload => {
-          setTimeout(() => {
-            dispatch({ type : LOADED_VERSIONS_FOR_SERVICE, payload: {...payload, serviceId}});
-          }, 1*1000);
+          dispatch({ type : LOADED_VERSIONS_FOR_SERVICE, payload: {...payload, serviceId}});
         })
         .catch(payload => {
 
