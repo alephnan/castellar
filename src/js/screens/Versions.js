@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import Anchor from 'grommet/components/Anchor';
-import Animate from 'grommet/components/Animate';
 import Article from 'grommet/components/Article';
 import Box from 'grommet/components/Box';
 import Button from 'grommet/components/Button';
 import CloseIcon from 'grommet/components/icons/base/Close';
 import Header from 'grommet/components/Header';
-import Heading from 'grommet/components/Heading';
 import Meter from 'grommet/components/Meter';
 import Select from 'grommet/components/Select';
 import Spinning from 'grommet/components/icons/Spinning';
@@ -22,12 +19,11 @@ import { getMessage } from 'grommet/utils/Intl';
 import NavControl from '../components/NavControl';
 
 import { loadServices } from '../actions/services';
-import { loadVersions,  deleteVersion , selectService , resetToast } from '../actions/versions';
+import { loadVersions, deleteVersion, selectService, resetToast } from '../actions/versions';
 
 import { pageLoaded } from './utils';
 
 class Versions extends Component {
-  
   componentDidMount() {
     pageLoaded('Versions');
     this.props.dispatch(loadServices());
@@ -35,33 +31,40 @@ class Versions extends Component {
   }
 
   render() {
-    const { error, serviceSelections, versionsWithAllocation , servicesLoaded , selectedService , loading , loadingVersionsForService , toastMessageDeletedVersionId } = this.props;
+    const {
+      serviceSelections,
+      versionsWithAllocation,
+      servicesLoaded,
+      selectedService,
+      toastMessageDeletedVersionId
+    } = this.props;
     const { intl } = this.context;
 
     const showToast = !!toastMessageDeletedVersionId;
-    // TODO: This should be added to DOM outside of the Version Screen, and in the root view instead.
+    // TODO: This should be added to DOM outside of the Version Screen,
+    // and in the root view instead.
     const toast = (
       <Toast status='ok'
-          onClose={() => {
-            this.props.dispatch(resetToast());
-          }}>
+        onClose={() => {
+          this.props.dispatch(resetToast());
+        }}>
         Deleted version: <em>{toastMessageDeletedVersionId}</em>
       </Toast>
     );
 
-    const rows = versionsWithAllocation.map(version => {
+    const rows = versionsWithAllocation.map((version) => {
       let status = <Status value='critical' />;
-      if(version.servingStatus == 'SERVING') {
+      if (version.servingStatus === 'SERVING') {
         status = <Status value='ok' />;
       }
       let allocationCell = null;
-      if(selectedService != '*') {
+      if (selectedService !== '*') {
         allocationCell = (
           <td>
             <Spinning />
           </td>
         );
-        if(servicesLoaded) {
+        if (servicesLoaded) {
           const allocation = version.allocation;
           allocationCell = (
             <td>
@@ -78,9 +81,9 @@ class Versions extends Component {
         }
       }
       return (
-         <TableRow key={version.id}>
+        <TableRow key={version.id}>
           <td>
-            {selectedService  == '*' ? version.name.replace('/service/', '').replace('version/', '') : version.id }
+            {selectedService === '*' ? version.name.replace('/service/', '').replace('version/', '') : version.id }
           </td>
           <td>
             {status}
@@ -98,14 +101,14 @@ class Versions extends Component {
           <td>
             <Button icon={<CloseIcon />}
               onClick={() => {
-                if(selectedService == '*') {
+                if (selectedService === '*') {
                   // Assume version.name has format: /service/:(.*)/version/:(.*)
                   // and serviceID and versionId cannot contain '/'
                   const serviceId = version.name.match('^/service/(.*)/version')[1];
                   const versionId = version.name.split('/version/')[1];
-                  this.props.dispatch(deleteVersion(serviceId, versionId))
+                  this.props.dispatch(deleteVersion(serviceId, versionId));
                 } else {
-                  this.props.dispatch(deleteVersion(selectedService, version.id))
+                  this.props.dispatch(deleteVersion(selectedService, version.id));
                 }
               }}
               href='#'
@@ -122,22 +125,19 @@ class Versions extends Component {
     const serviceSelectorBox = servicesLoaded ? (
       <Box size='medium'>
         <Select placeHolder='select a service'
-        inline={false}
-        multiple={false}
-        options={serviceSelections}
-        onChange={({value}) => {
-          this.props.dispatch(selectService(value))
-        }}
-        value={
-          selectedService
-        }/>
+          inline={false}
+          multiple={false}
+          options={serviceSelections}
+          onChange={({ value }) => {
+            this.props.dispatch(selectService(value));
+          }}
+          value={selectedService} />
       </Box>
     ) : (
-      <Box size='medium'>
-      </Box>
+      <Box size='medium' />
     );
 
-    const table = selectedService == '*' ? 
+    const table = selectedService === '*' ?
       (<Table scrollable={false}>
         <thead>
           <tr>
@@ -162,10 +162,10 @@ class Versions extends Component {
           </tr>
         </thead>
         <tbody>
-         {rows}
+          {rows}
         </tbody>
       </Table>) :
-       (<Table scrollable={false}>
+      (<Table scrollable={false}>
         <thead>
           <tr>
             <th>
@@ -192,11 +192,10 @@ class Versions extends Component {
           </tr>
         </thead>
         <tbody>
-         {rows}
+          { rows }
         </tbody>
       </Table>
-    );
-
+      );
     return (
       <Article primary={true}>
         { showToast ? toast : null}
@@ -205,17 +204,12 @@ class Versions extends Component {
           direction='row'
           justify='between'
           size='large'
-          pad={{ horizontal: 'medium', between: 'small' }}
-        >
-        <NavControl name={getMessage(intl, 'Versions')} />
+          pad={{ horizontal: 'medium', between: 'small' }}>
+          <NavControl name={getMessage(intl, 'Versions')} />
           {serviceSelectorBox}
         </Header>
         <Box pad='medium'>
-          <Animate
-            enter={{"animation": "fade", "duration": 1500, "delay": 0}}
-            keep={false}>
-          {loadingVersionsForService ? <Spinning /> : table}
-          </Animate>
+          {table}
         </Box>
       </Article>
     );
@@ -223,20 +217,20 @@ class Versions extends Component {
 }
 
 Versions.defaultProps = {
-  error: undefined,
-  services: [],
-  versionsWithAllocation: [],
   selectedService: '*',
+  servicesLoaded: false,
   serviceSelections: ['*'],
-  loadingVersionsForService: false,
+  versionsWithAllocation: [],
   toastMessage: undefined,
+  toastMessageDeletedVersionId: undefined,
 };
 
 Versions.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  error: PropTypes.object,
   selectedService: PropTypes.string,
-  services: PropTypes.arrayOf(PropTypes.object),
+  servicesLoaded: PropTypes.bool,
+  serviceSelections: PropTypes.arrayOf(PropTypes.string),
+  toastMessageDeletedVersionId: PropTypes.string,
   versionsWithAllocation: PropTypes.arrayOf(PropTypes.object),
 };
 
@@ -245,21 +239,20 @@ Versions.contextTypes = {
 };
 
 
-const select = state => {
+const select = (state) => {
   const loadingVersionsForService = state.versions.loadingVersionsForService;
   const serviceId = state.versions.selectedService;
-  const service = state.services.services.find(({id}) => id == serviceId);
-  const allocationByVersionId = service ? new Map(Object.entries(service.split.allocations)) : new Map();
-  const versionsWithAllocation = state.versions.versions.map(version => {
-    return {
-      ...version,
-      allocation: 100*allocationByVersionId.get(version.id) || 0
-    }
-  });
+  const service = state.services.services.find(({ id }) => id === serviceId);
+  const allocationByVersionId = service ?
+    new Map(Object.entries(service.split.allocations)) : new Map();
+  const versionsWithAllocation = state.versions.versions.map(version => ({
+    ...version,
+    allocation: 100 * allocationByVersionId.get(version.id) || 0
+  }));
 
   return {
     selectedService: state.versions.selectedService,
-    serviceSelections: ['*'].concat(state.services.services.map(({id}) => id)),
+    serviceSelections: ['*'].concat(state.services.services.map(({ id }) => id)),
     versionsWithAllocation,
     servicesLoaded: state.services.services.length > 0,
     loadingVersionsForService,

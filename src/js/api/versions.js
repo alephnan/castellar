@@ -7,7 +7,7 @@ export function loadVersions() {
     method: 'GET',
     credentials: 'same-origin',
   };
-  return fetch(`/api/version/`, options)
+  return fetch('/api/version/', options)
     .then(parseJSON);
 }
 
@@ -15,7 +15,7 @@ export function deleteVersion(serviceId, versionId) {
   const options = {
     headers: headers(),
     method: 'DELETE',
-    body: JSON.stringify({ serviceId , versionId }),
+    body: JSON.stringify({ serviceId, versionId }),
     credentials: 'same-origin',
   };
 

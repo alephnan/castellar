@@ -43,12 +43,11 @@ notifier.use('/api/task/:id', param => (
 
 const app = express()
   .use(compression())
-   // TODO: Need to use same secret as session?
-  .use(cookieParser())
+  .use(cookieParser()) // TODO: Need to use same secret as session?
   .use(morgan('tiny'))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({
-	  extended: true
+    extended: true
   }))
   // TODO: use CORS
   // TODO: re-evaluate this configuration.

@@ -1,13 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import Anchor from 'grommet/components/Anchor';
 import Article from 'grommet/components/Article';
 import Box from 'grommet/components/Box';
 import Button from 'grommet/components/Button';
 import CloseIcon from 'grommet/components/icons/base/Close';
 import Header from 'grommet/components/Header';
-import Heading from 'grommet/components/Heading';
 import Table from 'grommet/components/Table';
 import TableRow from 'grommet/components/TableRow';
 import { getMessage } from 'grommet/utils/Intl';
@@ -24,37 +22,35 @@ class Services extends Component {
   }
 
   render() {
-    const { error, services } = this.props;
+    const { services } = this.props;
     const { intl } = this.context;
 
-    const rows = services.map(service => {
-      return (
-        <TableRow key={service.id}>
-          <td>
-            {service.id}
-          </td>
-          <td>
-            5
-          </td>
-          <td>
-            May 9, 2017, 11:56:14 PM
-          </td>
-          <td>
-            service-account@google.com
-          </td>
-          <td>
-            <Button icon={<CloseIcon />}
-              onClick={() => alert('hi')}
-              href='#'
-              primary={false}
-              secondary={false}
-              accent={false}
-              critical={false}
-              plain={false} />
-          </td>
-        </TableRow>
-      );
-    });
+    const rows = services.map(service =>
+      (<TableRow key={service.id}>
+        <td>
+          {service.id}
+        </td>
+        <td>
+          {}
+        </td>
+        <td>
+          May 9, 2017, 11:56:14 PM
+        </td>
+        <td>
+          service-account@google.com
+        </td>
+        <td>
+          <Button icon={<CloseIcon />}
+            onClick={() => alert('hi')}
+            href='#'
+            primary={false}
+            secondary={false}
+            accent={false}
+            critical={false}
+            plain={false} />
+        </td>
+      </TableRow>
+      ));
 
     const table = (
       <Table scrollable={false}>
@@ -102,13 +98,11 @@ class Services extends Component {
 }
 
 Services.defaultProps = {
-  error: undefined,
   services: [],
 };
 
 Services.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  error: PropTypes.object,
   services: PropTypes.arrayOf(PropTypes.object),
 };
 
@@ -116,6 +110,6 @@ Services.contextTypes = {
   intl: PropTypes.object,
 };
 
-const select = state => ({ ...state.services , ...state.error});
+const select = state => ({ ...state.services, ...state.error });
 
 export default connect(select)(Services);

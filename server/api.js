@@ -1,13 +1,13 @@
 import express from 'express';
-import { addSession, getTasks, getTask , getServices, getVersions, deleteVersion , getVersionsForService } from './data';
-import {refreshStore as googleRefreshTokenStore, accessStore as googleAccessTokenStore } from './google_token_store';
-import {GCP_PROJECT_ID} from './secrets';
+import { addSession, getTasks, getTask, getServices, getVersions, deleteVersion, getVersionsForService } from './data';
+import { refreshStore as googleRefreshTokenStore, accessStore as googleAccessTokenStore } from './google_token_store';
+import { GCP_PROJECT_ID } from './secrets';
 
 const router = express.Router();
 
 // Middleware to get user's OAUTH tokens to use in GAPI call.
 router.use('/', (req, res, next) => {
-  if(!req.user || !req.user.id) {
+  if (!req.user || !req.user.id) {
     res.status(401).end();
     return;
     // TODO: Handle on client. Redirect or link to login.
@@ -52,7 +52,7 @@ router.get('/task/:id', (req, res) => {
 });
 
 router.get('/service', (req, res) => {
-  const {accessToken} = res.locals;
+  const { accessToken } = res.locals;
   getServices(accessToken, GCP_PROJECT_ID).then((result) => {
     if (!result.services) {
       res.status(404).end();
@@ -63,7 +63,7 @@ router.get('/service', (req, res) => {
 });
 
 router.get('/service/:serviceId/version', (req, res) => {
-  const {accessToken} = res.locals;
+  const { accessToken } = res.locals;
   const serviceId = req.params.serviceId;
   getVersionsForService(accessToken, GCP_PROJECT_ID, serviceId).then((result) => {
     if (!result.versions) {
@@ -75,7 +75,7 @@ router.get('/service/:serviceId/version', (req, res) => {
 });
 
 router.get('/version', (req, res) => {
-  const {accessToken} = res.locals;
+  const { accessToken } = res.locals;
   getVersions(accessToken, GCP_PROJECT_ID).then((result) => {
     if (!result.versions) {
       res.status(404).end();

@@ -1,4 +1,4 @@
-import {flatMap as _flatMap} from 'lodash'
+import { flatMap as _flatMap } from 'lodash';
 import axios from 'axios';
 
 const _sessions = {};
@@ -112,17 +112,16 @@ export function getServices(accessToken, pid) {
   const path = `https://appengine.googleapis.com/v1/apps/${pid}/services`;
   const config = {
     headers: {
-      'Authorization': `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`
     }
   };
-  return axios(path, config).then(response => {
-    return {
-      services: response.data.services,
-    };
-  });
-};
+  return axios(path, config).then(response => ({
+    services: response.data.services,
+  }));
+}
 
-export function deleteVersion(serviceId, versionId) {
+
+export function deleteVersion(serviceId, versionId) { // eslint-disable-line no-unused-vars
   // TODO: Reimplement against Admin API.
   // if(!servicesVersionsMap.has(serviceId)) {
   //   return Promise.resolve({ version: undefined});
@@ -137,20 +136,21 @@ export function deleteVersion(serviceId, versionId) {
 // Gets versions for all services.
 export function getVersions(accessToken, pid) {
   return getServices(accessToken, pid)
-      .then(({services}) => Promise.all(services.map(({id}) => getVersionsForService(accessToken, pid, id))))
-      .then(versionPromises => Promise.all(versionPromises))
-      .then(result => ({ versions: _flatMap(result, ({versions}) => versions) }));
+    .then(({ services }) => Promise.all(
+      services.map(({ id }) => getVersionsForService(accessToken, pid, id))))
+    .then(versionPromises => Promise.all(versionPromises))
+    .then(result => ({ versions: _flatMap(result, ({ versions }) => versions) }));
 }
 
 export function getVersionsForService(accessToken, pid, serviceId) {
   const path = `https://appengine.googleapis.com/v1/apps/${pid}/services/${serviceId}/versions`;
   const config = {
     headers: {
-      'Authorization': `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`
     }
   };
-  return axios(path, config).then(response => {
-    const versions =  response.data.versions.map(v => {
+  return axios(path, config).then((response) => {
+    const versions = response.data.versions.map((v) => {
       // TODO: get real count
       v.instanceCount = 0;
       return v;

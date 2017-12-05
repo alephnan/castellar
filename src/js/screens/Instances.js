@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import Anchor from 'grommet/components/Anchor';
 import Article from 'grommet/components/Article';
 import Box from 'grommet/components/Box';
 import Header from 'grommet/components/Header';
@@ -17,8 +16,6 @@ class Instances extends Component {
   }
 
   render() {
-    const { intl } = this.context;
-
     return (
       <Article primary={true}>
         <Header
@@ -40,10 +37,6 @@ class Instances extends Component {
 }
 
 Instances.defaultProps = {
-};
-
-Instances.propTypes = {
-  dispatch: PropTypes.func.isRequired,
 };
 
 Instances.contextTypes = {

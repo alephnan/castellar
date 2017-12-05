@@ -14,7 +14,7 @@ class GoogleRefreshTokenStore {
   }
 
   get(id) {
-    if(!fs.existsSync(this.filePath)) {
+    if (!fs.existsSync(this.filePath)) {
       return null;
     }
     const obj = jsonfile.readFileSync(this.filePath);
@@ -22,7 +22,7 @@ class GoogleRefreshTokenStore {
   }
 
   has(id) {
-    if(!fs.existsSync(this.filePath)) {
+    if (!fs.existsSync(this.filePath)) {
       return false;
     }
     const obj = jsonfile.readFileSync(this.filePath);
@@ -37,12 +37,12 @@ class GoogleAccessTokenStore {
   }
 
   get(refreshToken) {
-    if(!fs.existsSync(this.filePath)) {
+    if (!fs.existsSync(this.filePath)) {
       return null;
     }
     const obj = jsonfile.readFileSync(this.filePath);
     const value = obj[refreshToken];
-    const {expiration, accessToken} = value;
+    const { accessToken } = value; // dereference expiration date from here.
     // TODO: Refresh access token if necessary.
     return accessToken;
   }
